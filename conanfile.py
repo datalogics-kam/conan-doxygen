@@ -42,6 +42,9 @@ class DoxygenConan(ConanFile):
 include("../conanbuildinfo.cmake")
 conan_basic_setup()""")
 
+        # Fixups to build on Mac with latest Xcode 10
+        tools.replace_in_file(cmakefile, "set(MACOS_VERSION_MIN 10.5)", "set(MACOS_VERSION_MIN 10.7)")
+        tools.replace_in_file(cmakefile, "-Wno-deprecated-register", "-Wno-deprecated-register -Wno-deprecated-declarations")
 
     def config_options(self):
         if self.settings.os == 'Windows':
