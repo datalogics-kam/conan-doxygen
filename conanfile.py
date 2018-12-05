@@ -38,7 +38,9 @@ class DoxygenConan(ConanFile):
         tools.replace_in_file(doxyfile, "## MARKER POINT: DOXYGEN_EXECUTABLE", 'set(DOXYGEN_EXECUTABLE "${CONAN_DOXYGEN_ROOT}/%s" CACHE INTERNAL "")' % executeable)
         tools.replace_in_file(doxyfile, "## MARKER POINT: DOXYGEN_VERSION", 'set(DOXYGEN_VERSION "%s" CACHE INTERNAL "")' % self.version)
 
-        tools.replace_in_file(cmakefile, "include(version)", "include('${CMAKE_CURRENT_SOURCE_DIR}/cmake/version.cmake')")
+        tools.replace_in_file(cmakefile, "project(doxygen)", """project(doxygen)
+include("../conanbuildinfo.cmake")
+conan_basic_setup()""")
 
 
     def config_options(self):
@@ -50,7 +52,7 @@ class DoxygenConan(ConanFile):
         cmake.definitions["win_static"] = "ON" if self.settings.os == 'Windows' and self.options.shared == False else "OFF"
         cmake.definitions["use_libclang"] = "ON" if self.options.use_libclang else "OFF"
 
-        cmake.configure(build_folder=self.build_subfolder)
+        cmake.configure(source_folder=self.source_subfolder, build_folder=self.build_subfolder)
         return cmake
 
     def build(self):
