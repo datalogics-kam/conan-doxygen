@@ -98,3 +98,8 @@ class DoxygenConan(ConanFile):
 
     def package_info(self):
         self.env_info.path.append(self.package_folder)
+
+    def package_id(self):
+        # Ignore version, especially on Macos where we may declare os.version
+        # for deployment targets
+        del self.info.settings.os.version
